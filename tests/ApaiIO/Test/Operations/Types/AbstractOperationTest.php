@@ -15,29 +15,12 @@
  * limitations under the License.
  */
 
-namespace ApaiIO\Test\Operations;
+namespace ApaiIO\Test\Operations\Types;
 
 use ApaiIO\Operations\Search;
 
-class OperationsTest extends \PHPUnit_Framework_TestCase
+class AbstractOperationTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testSearchException()
-    {
-        $search = new Search();
-        $search->setPage(11);
-    }
-
-    public function testSearchValidPage()
-    {
-        $search = new Search();
-        $search->setPage(1);
-
-        $this->assertEquals(1, $search->getItemPage());
-    }
-
     public function testAbstractOperationSetterAndGetter()
     {
         $search = new Search();

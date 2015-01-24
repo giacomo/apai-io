@@ -25,6 +25,12 @@ namespace ApaiIO\Operations;
  */
 class Lookup extends AbstractOperation
 {
+    const TYPE_ASIN = 'ASIN';
+    const TYPE_SKU = 'SKU';
+    const TYPE_UPC = 'UPC';
+    const TYPE_EAN = 'EAN';
+    const TYPE_ISBN = 'ISBN';
+
     /**
      * {@inheritdoc}
      */
@@ -43,6 +49,70 @@ class Lookup extends AbstractOperation
     public function setItemId($itemId)
     {
         $this->parameter['ItemId'] = $itemId;
+
+        return $this;
+    }
+
+    /**
+     * Sets the idtype either ASIN (Default), SKU, UPC, EAN, and ISBN
+     *
+     * @param string $idType
+     *
+     * @return \ApaiIO\Operations\Lookup
+     */
+    public function setIdType($idType)
+    {
+        $idTypes = array(
+            self::TYPE_ASIN,
+            self::TYPE_SKU,
+            self::TYPE_UPC,
+            self::TYPE_EAN,
+            self::TYPE_ISBN
+        );
+
+        if (!in_array($idType, $idTypes)) {
+            throw new \InvalidArgumentException(sprintf(
+                "Invalid type '%s' passed. Valid types are: '%s'",
+                $idType,
+                implode(', ', $idTypes)
+            ));
+        }
+
+        $this->parameter['IdType'] = $idType;
+
+        if (empty($this->parameter['SearchIndex']) && $idType != self::TYPE_ASIN) {
+            $this->parameter['SearchIndex'] = 'All';
+        }
+
+        return $this;
+    }
+
+    /**
+     * Sets the searchindex which should be used when set IdType other than ASIN
+     *
+     * @param string $searchIndex
+     *
+     * @return \ApaiIO\Operations\Lookup
+     */
+    public function setSearchIndex($searchIndex)
+    {
+        $this->parameter['SearchIndex'] = $searchIndex;
+
+        return $this;
+    }
+
+    /**
+     * Sets the condition of the items to return: New | Used | Collectible | Refurbished | All
+     *
+     * Defaults to New.
+     *
+     * @param string $condition
+     *
+     * @return \ApaiIO\Operations\Lookup
+     */
+    public function setCondition($condition)
+    {
+        $this->parameter['Condition'] = $condition;
 
         return $this;
     }

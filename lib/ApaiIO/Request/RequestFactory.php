@@ -64,10 +64,12 @@ class RequestFactory
         $factoryCallback = $configuration->getRequestFactory();
 
         if (true === is_object($class) && $class instanceof \ApaiIO\Request\RequestInterface) {
+            $class->setConfiguration($configuration);
+
             return self::applyCallback($factoryCallback, $class);
         }
 
-        if (true === is_string($class) && true == array_key_exists($class, self::$requestObjects)) {
+        if (true === is_string($class) && true === array_key_exists($class, self::$requestObjects)) {
             $request = self::$requestObjects[$class];
             $request->setConfiguration($configuration);
 

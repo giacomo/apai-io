@@ -65,7 +65,7 @@ class ResponseTransformerFactory
             return self::applyCallback($factoryCallback, $class);
         }
 
-        if (true === is_string($class) && true == array_key_exists($class, self::$responseTransformerObjects)) {
+        if (true === is_string($class) && true === array_key_exists($class, self::$responseTransformerObjects)) {
             return self::applyCallback($factoryCallback, self::$responseTransformerObjects[$class]);
         }
 
@@ -77,10 +77,6 @@ class ResponseTransformerFactory
 
         if ($reflectionClass->implementsInterface('\\ApaiIO\\ResponseTransformer\\ResponseTransformerInterface')) {
             $responseTransformer = new $class();
-
-            if ($factoryCallback = $configuration->getResponseTransformerFactory()) {
-                $responseTransformer = $factoryCallback($responseTransformer);
-            }
 
             return self::$responseTransformerObjects[$class] = self::applyCallback(
                 $factoryCallback,

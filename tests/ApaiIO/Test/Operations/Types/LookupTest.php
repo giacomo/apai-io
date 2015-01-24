@@ -33,4 +33,82 @@ class LookupTest extends \PHPUnit_Framework_TestCase
         $lookup = new Lookup();
         $this->assertEquals('ItemLookup', $lookup->getName());
     }
+
+    public function testGetIdType()
+    {
+        $lookup = new Lookup();
+        $valididTypes = array(
+            'ASIN',
+            'SKU',
+            'UPC',
+            'EAN',
+            'ISBN',
+            Lookup::TYPE_ASIN,
+            Lookup::TYPE_SKU,
+            Lookup::TYPE_UPC,
+            Lookup::TYPE_EAN,
+            Lookup::TYPE_ISBN
+        );
+        foreach($valididTypes as $valididType) {
+            $lookup->setIdType($valididType);
+            $this->assertEquals($valididType, $lookup->getIdType());
+        }
+    }
+
+    /**
+     * @dataProvider providerSetIdTypeAffectsSearchIndex
+     *
+     * @param string      $idType
+     * @param string|null $expectedSearchIndex
+     */
+    public function testSetIdTypeAffectsSearchIndex($idType, $expectedSearchIndex)
+    {
+        $lookup = new Lookup();
+        $lookup->setIdType($idType);
+
+        $parameters = $lookup->getOperationParameter();
+
+        if ($expectedSearchIndex === null) {
+            $this->assertArrayNotHasKey('SearchIndex', $parameters);
+        } else {
+            $this->assertSame($expectedSearchIndex, $parameters['SearchIndex']);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function providerSetIdTypeAffectsSearchIndex()
+    {
+        return array(
+            array(Lookup::TYPE_ASIN, null),
+            array(Lookup::TYPE_SKU, 'All'),
+            array(Lookup::TYPE_UPC, 'All'),
+            array(Lookup::TYPE_EAN, 'All'),
+            array(Lookup::TYPE_ISBN, 'All')
+        );
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testExceptionWhenPassingWrongIdType()
+    {
+        $lookup = new Lookup();
+        $lookup->setIdType('Invalid IdType');
+    }
+
+    public function testGetSearchIndex()
+    {
+        $lookup = new Lookup();
+        $lookup->setSearchIndex('Appliances');
+        $this->assertEquals('Appliances', $lookup->getSearchIndex());
+    }
+
+    public function testConditionGetterAndSetter()
+    {
+        $lookup = new Lookup();
+        $lookup->setCondition('All');
+        $this->assertEquals('All', $lookup->getCondition());
+    }
 }

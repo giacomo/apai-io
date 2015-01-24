@@ -33,24 +33,28 @@ class Request implements RequestInterface
 {
     /**
      * Connection time out in seconds
+     *
      * @var int
      */
     const CONNECTION_TIMEOUT = CURLOPT_CONNECTTIMEOUT;
 
     /**
      * Time out in seconds
+     *
      * @var int
      */
     const TIMEOUT = CURLOPT_TIMEOUT;
 
     /**
      * Enable/Disable location following
+     *
      * @var int
      */
     const FOLLOW_LOCATION = CURLOPT_FOLLOWLOCATION;
 
     /**
      * Useragent
+     *
      * @var string
      */
     const USERAGENT = CURLOPT_USERAGENT;
@@ -82,10 +86,10 @@ class Request implements RequestInterface
     public function __construct(array $options = array())
     {
         $this->options = array(
-            self::USERAGENT => "ApaiIO [" . ApaiIO::VERSION . "]",
+            self::USERAGENT          => "ApaiIO [" . ApaiIO::VERSION . "]",
             self::CONNECTION_TIMEOUT => 10,
-            self::TIMEOUT => 10,
-            self::FOLLOW_LOCATION => 1
+            self::TIMEOUT            => 10,
+            self::FOLLOW_LOCATION    => 1
         );
         $this->setOptions($options);
     }
@@ -139,7 +143,7 @@ class Request implements RequestInterface
         $options[CURLOPT_URL] = sprintf($this->requestScheme, $this->configuration->getCountry(), $queryString);
 
         foreach ($options as $currentOption => $currentOptionValue) {
-            if (false === @curl_setopt($ch, $currentOption, $currentOptionValue)) {
+            if (false === curl_setopt($ch, $currentOption, $currentOptionValue)) {
                 throw new \RuntimeException(
                     sprintf(
                         "An error occurred while setting %s with value %s",

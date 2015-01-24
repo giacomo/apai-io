@@ -84,4 +84,71 @@ class Search extends AbstractOperation
 
         return $this;
     }
+
+    /**
+     * Sets the minimum price to a specified value for the search
+     * Currency will be given by the site you are querying: EUR for IT, USD for COM
+     * Price should be given as integer. 8.99$ USD becomes 899
+     *
+     * @param integer $price
+     *
+     * @return \ApaiIO\Operations\Search
+     */
+    public function setMinimumPrice($price)
+    {
+        $this->validatePrice($price);
+        $this->parameter['MinimumPrice'] = $price;
+
+        return $this;
+    }
+
+    /**
+     * Sets the maximum price to a specified value for the search
+     * Currency will be given by the site you are querying: EUR for IT, USD for COM
+     * Price should be given as integer. 8.99$ USD becomes 899
+     *
+     * @param integer $price
+     *
+     * @return \ApaiIO\Operations\Search
+     */
+    public function setMaximumPrice($price)
+    {
+        $this->validatePrice($price);
+        $this->parameter['MaximumPrice'] = $price;
+
+        return $this;
+    }
+
+    /**
+     * Sets the condition of the items to return: New | Used | Collectible | Refurbished | All
+     *
+     * Defaults to New.
+     *
+     * @param string $condition
+     *
+     * @return \ApaiIO\Operations\Search
+     */
+    public function setCondition($condition)
+    {
+        $this->parameter['Condition'] = $condition;
+
+        return $this;
+    }
+
+    /**
+     * Validates the given price.
+     *
+     * @param integer $price
+     */
+    protected function validatePrice($price)
+    {
+        if (false === is_numeric($price)  || $price < 1) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    '%s is an invalid price value. It has to be numeric and >= than 1',
+                    $price
+                )
+            );
+        }
+    }
 }
